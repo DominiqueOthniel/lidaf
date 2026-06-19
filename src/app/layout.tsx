@@ -26,7 +26,8 @@ export const metadata: Metadata = {
   description:
     'Cabinet Lidaf CCA, votre partenaire stratégique à Douala pour la fiscalité, comptabilité, gestion de projets, logistique et formations professionnelles.',
   icons: {
-    icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
+    icon: [{ url: '/assets/images/lidaf/logo-lcca.png', type: 'image/png' }],
+    apple: [{ url: '/assets/images/lidaf/logo-lcca.png', type: 'image/png' }],
   },
 };
 

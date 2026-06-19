@@ -1,17 +1,23 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
 import Icon from '@/components/ui/AppIcon';
 
 const clients = [
-  { name: 'OMC Sarl', sector: 'Commerce' },
-  { name: 'SICAF', sector: 'Finance' },
-  { name: 'ALTRAC LTD', sector: 'Transport' },
-  { name: 'COGEBA', sector: 'BTP' },
-  { name: 'GONGA S.A', sector: 'Industrie' },
-  { name: 'AFBU', sector: 'Agriculture' },
-  { name: 'SICA S.A', sector: 'Commerce' },
-  { name: 'Jost Sugar Company', sector: 'Agroalimentaire' },
+  { name: 'OMC Sarl', sector: 'Commerce', initials: 'OM', logoBase: 'omc-sarl' },
+  { name: 'SICAF', sector: 'Finance', initials: 'SC', logoBase: 'sicaf' },
+  { name: 'ALTRAC LTD', sector: 'Transport', initials: 'AL', logoBase: 'altrac-ltd' },
+  { name: 'COGEBA', sector: 'BTP', initials: 'CB', logoBase: 'cogeba' },
+  { name: 'GONGA S.A', sector: 'Industrie', initials: 'GA', logoBase: 'gonga-sa' },
+  { name: 'AFBU', sector: 'Agriculture', initials: 'AF', logoBase: 'afbu' },
+  { name: 'SICA S.A', sector: 'Commerce', initials: 'SA', logoBase: 'sica-sa' },
+  {
+    name: 'Jost Sugar Company',
+    sector: 'Agroalimentaire',
+    initials: 'JS',
+    logoBase: 'jost-sugar-company',
+  },
 ];
 
 const stats = [
@@ -20,6 +26,62 @@ const stats = [
   { value: '100%', label: 'Conformité garantie', icon: 'ShieldCheckIcon' },
   { value: 'Douala', label: 'Bonapriso, Cameroun', icon: 'MapPinIcon' },
 ];
+
+function getLogoCandidates(logoBase: string) {
+  const folders = ['/lidaf-logo', '/assets/images/lidaf-logo'];
+  const extensions = ['svg', 'png', 'webp', 'jpg', 'jpeg'];
+
+  return folders.flatMap((folder) =>
+    extensions.map((extension) => `${folder}/${logoBase}.${extension}`)
+  );
+}
+
+function ClientLogoCard({
+  client,
+  index,
+}: {
+  client: (typeof clients)[number];
+  index: number;
+}) {
+  const logoCandidates = useMemo(() => getLogoCandidates(client.logoBase), [client.logoBase]);
+  const [logoIndex, setLogoIndex] = useState(0);
+  const logoSrc = logoCandidates[logoIndex];
+  const hasLogoCandidate = Boolean(logoSrc);
+
+  return (
+    <div
+      className="client-logo-card group reveal-up client-animate flex-col gap-3"
+      style={{ transitionDelay: `${index * 70}ms` }}
+    >
+      <div className="relative flex h-16 w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-white via-secondary/40 to-muted px-4 ring-1 ring-border/70">
+        <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
+        {hasLogoCandidate ? (
+          <Image
+            src={logoSrc}
+            alt={`Logo ${client.name}`}
+            width={180}
+            height={72}
+            className="max-h-12 w-auto max-w-full object-contain transition duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 28vw, 180px"
+            onError={() => setLogoIndex((current) => current + 1)}
+          />
+        ) : (
+          <div className="client-avatar flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent shadow-sm">
+            <span className="text-sm font-extrabold tracking-wide text-white">{client.initials}</span>
+          </div>
+        )}
+      </div>
+      <div className="text-center">
+        <p className="text-xs sm:text-sm font-bold text-foreground leading-snug break-words">
+          {client.name}
+        </p>
+        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted-foreground font-bold">
+          {client.sector}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function ClientsSection({
   hideHeader = false,
@@ -55,21 +117,22 @@ export default function ClientsSection({
     >
       <div className="site-container">
         {!hideHeader && (
-        <>
-        {/* Header */}
-        <div className="mb-14 text-center reveal-up client-animate">
-          <span className="section-eyebrow mb-4 inline-flex">
-            <Icon name="StarIcon" size={12} variant="solid" />
-            Ils nous font confiance
-          </span>
-          <h2 className="text-section-title font-extrabold tracking-tight text-foreground mt-4 mb-4">
-            Nos clients de référence
-          </h2>
-          <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
-            Des entreprises et organisations qui nous confient leur développement et leur conformité depuis des années.
-          </p>
-        </div>
-        </>
+          <>
+            {/* Header */}
+            <div className="mb-14 text-center reveal-up client-animate">
+              <span className="section-eyebrow mb-4 inline-flex">
+                <Icon name="StarIcon" size={12} variant="solid" />
+                Ils nous font confiance
+              </span>
+              <h2 className="text-section-title font-extrabold tracking-tight text-foreground mt-4 mb-4">
+                Des partenaires qui avancent avec nous
+              </h2>
+              <p className="text-muted-foreground text-base max-w-2xl mx-auto leading-relaxed">
+                Entreprises, industries et organisations s&apos;appuient sur Lidaf CCA pour
+                sécuriser leur conformité, structurer leur gestion et accélérer leurs projets.
+              </p>
+            </div>
+          </>
         )}
 
         {/* Stats row */}
@@ -92,28 +155,9 @@ export default function ClientsSection({
         </div>
 
         {/* Client logos grid */}
-        {/* BENTO AUDIT: 8 client cards, 4-col desktop
-            Row 1: [col-1: OMCSarl cs-1] [col-2: SICAF cs-1] [col-3: ALTRAC cs-1] [col-4: COGEBA cs-1]
-            Row 2: [col-1: GONGA cs-1] [col-2: AFBU cs-1] [col-3: SICA cs-1] [col-4: JostSugar cs-1]
-            Placed 8/8 ✓ */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {clients.map((client, index) => (
-            /* each card cs-1 */
-            <div
-              key={client.name}
-              className="client-logo-card reveal-up client-animate flex-col gap-2"
-              style={{ transitionDelay: `${index * 70}ms` }}
-            >
-              <div className="client-avatar w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-2">
-                <span className="text-white font-extrabold text-sm">
-                  {client.name.slice(0, 2).toUpperCase()}
-                </span>
-              </div>
-              <p className="text-xs sm:text-sm font-bold text-foreground text-center leading-snug break-words">
-                {client.name}
-              </p>
-              <p className="text-[10px] text-muted-foreground text-center font-medium">{client.sector}</p>
-            </div>
+            <ClientLogoCard key={client.name} client={client} index={index} />
           ))}
         </div>
 
