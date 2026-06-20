@@ -1,23 +1,33 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Icon from '@/components/ui/AppIcon';
 
-const clients = [
-  { name: 'OMC Sarl', sector: 'Commerce', initials: 'OM', logoBase: 'omc-sarl' },
-  { name: 'SICAF', sector: 'Finance', initials: 'SC', logoBase: 'sicaf' },
-  { name: 'ALTRAC LTD', sector: 'Transport', initials: 'AL', logoBase: 'altrac-ltd' },
-  { name: 'COGEBA', sector: 'BTP', initials: 'CB', logoBase: 'cogeba' },
-  { name: 'GONGA S.A', sector: 'Industrie', initials: 'GA', logoBase: 'gonga-sa' },
-  { name: 'AFBU', sector: 'Agriculture', initials: 'AF', logoBase: 'afbu' },
-  { name: 'SICA S.A', sector: 'Commerce', initials: 'SA', logoBase: 'sica-sa' },
-  {
-    name: 'Jost Sugar Company',
-    sector: 'Agroalimentaire',
-    initials: 'JS',
-    logoBase: 'jost-sugar-company',
-  },
+const partnerLogos = [
+  '003705e0-1a97-41f8-a8fb-ccddf1717637.jpg',
+  '03859e07-e90d-4100-980c-7d2c9d77dc52.jpg',
+  '2566ce68-2da6-4a63-801b-79c573d34eeb.jpg',
+  '34ce7e8f-0b15-44e4-8c35-5d626cefc18c.jpg',
+  '3cf0b5f3-dc54-40e2-8a26-f5ec1b493a11.jpg',
+  '4ce404e7-3286-4fbf-a891-21191560072e.jpg',
+  '655eaaed-0bab-4413-b46a-29d005b88b67.jpg',
+  '6c3235a1-61d5-431d-bb57-1f03dcbc4049.jpg',
+  '7c642102-dbde-47f6-89ba-eebe44ee58d2.jpg',
+  '83bacc31-6598-4626-8ae5-551af7b1e04f.jpg',
+  '88d86701-5587-4a8e-8d03-e5353807ed01.jpg',
+  '9f125220-1f15-4f14-be98-c9ff20c953c0.jpg',
+  'b468a16e-a4c2-405e-bbfb-ca511377a913.jpg',
+  'b64a87da-e609-4a2d-b434-797bc753e983.jpg',
+  'b9f96e97-f34e-41fb-98e4-8da2c82a8008.jpg',
+  'ba2d85a2-26b6-40df-8bb4-d028020272db.jpg',
+  'cb61c21d-a7f3-4ee0-8f2c-918c444cf814.jpg',
+  'd4183a1e-38f1-40e6-ba5c-c2b2782d1e45.jpg',
+  'd4692783-b342-498e-898f-71668d04c079.jpg',
+  'd7077319-6d91-424d-a3fc-080458a71648.jpg',
+  'ed8520bf-a2ad-414f-9086-7f920885e562.jpg',
+  'f20db34d-0ce7-46b6-81a6-25df41e1ab78.jpg',
+  'fce36b74-6558-4ef6-adf2-7da43e03fcc0.jpg',
 ];
 
 const stats = [
@@ -27,57 +37,30 @@ const stats = [
   { value: 'Douala', label: 'Bonapriso, Cameroun', icon: 'MapPinIcon' },
 ];
 
-function getLogoCandidates(logoBase: string) {
-  const folders = ['/lidaf-logo', '/assets/images/lidaf-logo'];
-  const extensions = ['svg', 'png', 'webp', 'jpg', 'jpeg'];
-
-  return folders.flatMap((folder) =>
-    extensions.map((extension) => `${folder}/${logoBase}.${extension}`)
-  );
-}
-
 function ClientLogoCard({
-  client,
+  logo,
   index,
 }: {
-  client: (typeof clients)[number];
+  logo: string;
   index: number;
 }) {
-  const logoCandidates = useMemo(() => getLogoCandidates(client.logoBase), [client.logoBase]);
-  const [logoIndex, setLogoIndex] = useState(0);
-  const logoSrc = logoCandidates[logoIndex];
-  const hasLogoCandidate = Boolean(logoSrc);
+  const partnerNumber = String(index + 1).padStart(2, '0');
 
   return (
     <div
-      className="client-logo-card group reveal-up client-animate flex-col gap-3"
+      className="client-logo-card group reveal-up client-animate"
       style={{ transitionDelay: `${index * 70}ms` }}
     >
-      <div className="relative flex h-16 w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-white via-secondary/40 to-muted px-4 ring-1 ring-border/70">
+      <div className="relative flex h-24 w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-white via-secondary/40 to-muted px-4 ring-1 ring-border/70">
         <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
-        {hasLogoCandidate ? (
-          <Image
-            src={logoSrc}
-            alt={`Logo ${client.name}`}
-            width={180}
-            height={72}
-            className="max-h-12 w-auto max-w-full object-contain transition duration-300 group-hover:scale-105"
-            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 28vw, 180px"
-            onError={() => setLogoIndex((current) => current + 1)}
-          />
-        ) : (
-          <div className="client-avatar flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent shadow-sm">
-            <span className="text-sm font-extrabold tracking-wide text-white">{client.initials}</span>
-          </div>
-        )}
-      </div>
-      <div className="text-center">
-        <p className="text-xs sm:text-sm font-bold text-foreground leading-snug break-words">
-          {client.name}
-        </p>
-        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted-foreground font-bold">
-          {client.sector}
-        </p>
+        <Image
+          src={`/assets/images/lidaf-logos/${logo}`}
+          alt={`Logo partenaire Lidaf CCA ${partnerNumber}`}
+          width={220}
+          height={120}
+          className="max-h-20 w-auto max-w-full object-contain transition duration-300 group-hover:scale-105"
+          sizes="(max-width: 640px) 45vw, (max-width: 1024px) 28vw, 220px"
+        />
       </div>
     </div>
   );
@@ -155,9 +138,9 @@ export default function ClientsSection({
         </div>
 
         {/* Client logos grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {clients.map((client, index) => (
-            <ClientLogoCard key={client.name} client={client} index={index} />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {partnerLogos.map((logo, index) => (
+            <ClientLogoCard key={logo} logo={logo} index={index} />
           ))}
         </div>
 
