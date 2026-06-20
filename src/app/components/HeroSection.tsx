@@ -28,19 +28,14 @@ export default function HeroSection() {
     <section ref={heroRef} className="hero-section relative w-full">
       <div className="absolute inset-0 w-full h-full">
         <AppImage
-          src="/assets/images/lidaf/hero-consulting-light.svg"
-          alt="Illustration claire d'une équipe de conseil en réunion professionnelle"
+          src="/assets/images/lidaf/herooo.jpeg"
+          alt="Présentation professionnelle en salle de réunion au Cabinet Lidaf CCA"
           fill
           priority
           className="object-cover object-center"
           sizes="100vw"
         />
         <div className="absolute inset-0 hero-scrim" />
-        <div
-          className="pointer-events-none absolute -right-28 top-[42%] h-80 w-80 -translate-y-1/2 rounded-[3rem] bg-contain bg-center bg-no-repeat opacity-[0.12] mix-blend-screen sm:-right-20 sm:h-[28rem] sm:w-[28rem] md:-right-16 md:top-1/2 md:h-[34rem] md:w-[34rem] lg:right-4 lg:h-[40rem] lg:w-[40rem]"
-          style={{ backgroundImage: "url('/assets/images/app_logo.svg')" }}
-          aria-hidden="true"
-        />
         <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-black/40 to-transparent" />
       </div>
 
