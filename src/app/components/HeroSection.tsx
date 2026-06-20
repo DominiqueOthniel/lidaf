@@ -37,7 +37,7 @@ export default function HeroSection() {
         />
         <div className="absolute inset-0 hero-scrim" />
         <div
-          className="pointer-events-none absolute -right-16 top-1/2 hidden h-[34rem] w-[34rem] -translate-y-1/2 rounded-[4rem] bg-contain bg-center bg-no-repeat opacity-[0.14] mix-blend-screen md:block lg:right-4 lg:h-[40rem] lg:w-[40rem]"
+          className="pointer-events-none absolute -right-28 top-[42%] h-80 w-80 -translate-y-1/2 rounded-[3rem] bg-contain bg-center bg-no-repeat opacity-[0.12] mix-blend-screen sm:-right-20 sm:h-[28rem] sm:w-[28rem] md:-right-16 md:top-1/2 md:h-[34rem] md:w-[34rem] lg:right-4 lg:h-[40rem] lg:w-[40rem]"
           style={{ backgroundImage: "url('/assets/images/app_logo.svg')" }}
           aria-hidden="true"
         />
@@ -60,11 +60,11 @@ export default function HeroSection() {
           </span>
         </div>
 
-        <h1 className="hero-animate opacity-0 text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold tracking-tight leading-[1.14] sm:leading-[1.08] max-w-5xl lg:max-w-[calc(100%-22rem)] xl:max-w-[calc(100%-24rem)] mb-4 sm:mb-6">
-          <span className="block md:whitespace-nowrap">
+        <h1 className="hero-animate opacity-0 text-[clamp(1.35rem,5.8vw,1.8rem)] sm:text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold tracking-tight leading-[1.18] sm:leading-[1.08] max-w-5xl lg:max-w-[calc(100%-22rem)] xl:max-w-[calc(100%-24rem)] mb-4 sm:mb-6">
+          <span className="block whitespace-nowrap">
             <span className="text-highlight-green">Le temple du management</span>
           </span>
-          <span className="mt-1 block w-fit sm:mt-2 md:whitespace-nowrap">
+          <span className="mt-1 block w-fit whitespace-nowrap sm:mt-2">
             <span className="text-highlight-green">par excellence</span>{' '}
             <span className="text-highlight-accent">des entreprises</span>
           </span>
