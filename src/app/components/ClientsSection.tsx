@@ -5,8 +5,10 @@ import Image from 'next/image';
 import Icon from '@/components/ui/AppIcon';
 
 const partnerLogos = [
-  '003705e0-1a97-41f8-a8fb-ccddf1717637.jpg',
+  'TLR-LOGO.jpeg',
+  '8bbf0dc9-f562-4ee0-b11b-abadb6ae8ccd.jpg',
   '03859e07-e90d-4100-980c-7d2c9d77dc52.jpg',
+  '003705e0-1a97-41f8-a8fb-ccddf1717637.jpg',
   '2566ce68-2da6-4a63-801b-79c573d34eeb.jpg',
   '34ce7e8f-0b15-44e4-8c35-5d626cefc18c.jpg',
   '3cf0b5f3-dc54-40e2-8a26-f5ec1b493a11.jpg',
@@ -16,6 +18,7 @@ const partnerLogos = [
   '7c642102-dbde-47f6-89ba-eebe44ee58d2.jpg',
   '83bacc31-6598-4626-8ae5-551af7b1e04f.jpg',
   '88d86701-5587-4a8e-8d03-e5353807ed01.jpg',
+  '9ac2fa95-428f-459a-8a54-8f8d6cb87fa2.jpg',
   '9f125220-1f15-4f14-be98-c9ff20c953c0.jpg',
   'b468a16e-a4c2-405e-bbfb-ca511377a913.jpg',
   'b64a87da-e609-4a2d-b434-797bc753e983.jpg',
@@ -105,7 +108,7 @@ export default function ClientsSection({
             <div className="mb-14 text-center reveal-up client-animate">
               <span className="section-eyebrow mb-4 inline-flex">
                 <Icon name="StarIcon" size={12} variant="solid" />
-                Ils nous font confiance
+                La confiance des références
               </span>
               <h2 className="text-section-title font-extrabold tracking-tight text-foreground mt-4 mb-4">
                 Des partenaires qui avancent avec nous

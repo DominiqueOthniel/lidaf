@@ -14,7 +14,7 @@ export default function ClientsPage() {
   return (
     <main className="bg-background min-h-screen">
       <PageHero
-        eyebrow="Ils nous font confiance"
+        eyebrow="La confiance des références"
         icon="StarIcon"
         title={
           <>

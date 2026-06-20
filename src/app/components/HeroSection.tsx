@@ -36,6 +36,11 @@ export default function HeroSection() {
           sizes="100vw"
         />
         <div className="absolute inset-0 hero-scrim" />
+        <div
+          className="pointer-events-none absolute -right-16 top-1/2 hidden h-[34rem] w-[34rem] -translate-y-1/2 rounded-[4rem] bg-contain bg-center bg-no-repeat opacity-[0.14] mix-blend-screen md:block lg:right-4 lg:h-[40rem] lg:w-[40rem]"
+          style={{ backgroundImage: "url('/assets/images/app_logo.svg')" }}
+          aria-hidden="true"
+        />
         <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-black/40 to-transparent" />
       </div>
 
@@ -55,10 +60,14 @@ export default function HeroSection() {
           </span>
         </div>
 
-        <h1 className="hero-animate opacity-0 text-hero-xl font-extrabold tracking-tight leading-[1.12] sm:leading-[1.1] max-w-3xl mb-4 sm:mb-6">
-          <span className="text-highlight-green">Le temple du management</span>{' '}
-          <span className="text-highlight-green">par excellence</span>{' '}
-          <span className="text-highlight-accent">des entreprises</span>
+        <h1 className="hero-animate opacity-0 text-[clamp(2rem,5.8vw,4.75rem)] font-extrabold tracking-tight leading-[1.14] sm:leading-[1.08] max-w-5xl mb-4 sm:mb-6">
+          <span className="block md:whitespace-nowrap">
+            <span className="text-highlight-green">Le temple du management</span>
+          </span>
+          <span className="mt-1 block sm:mt-2 md:whitespace-nowrap">
+            <span className="text-highlight-green">par excellence</span>{' '}
+            <span className="text-highlight-accent">des entreprises</span>
+          </span>
         </h1>
 
         <p className="hero-animate opacity-0 text-white/80 text-base sm:text-lg font-medium max-w-xl mb-6 sm:mb-8 leading-relaxed">
