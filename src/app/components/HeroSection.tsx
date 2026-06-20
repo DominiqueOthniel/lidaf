@@ -60,11 +60,11 @@ export default function HeroSection() {
           </span>
         </div>
 
-        <h1 className="hero-animate opacity-0 text-[clamp(2rem,5.8vw,4.75rem)] font-extrabold tracking-tight leading-[1.14] sm:leading-[1.08] max-w-5xl mb-4 sm:mb-6">
+        <h1 className="hero-animate opacity-0 text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold tracking-tight leading-[1.14] sm:leading-[1.08] max-w-5xl lg:max-w-[calc(100%-22rem)] xl:max-w-[calc(100%-24rem)] mb-4 sm:mb-6">
           <span className="block md:whitespace-nowrap">
             <span className="text-highlight-green">Le temple du management</span>
           </span>
-          <span className="mt-1 block sm:mt-2 md:whitespace-nowrap">
+          <span className="mt-1 block w-fit sm:mt-2 md:whitespace-nowrap">
             <span className="text-highlight-green">par excellence</span>{' '}
             <span className="text-highlight-accent">des entreprises</span>
           </span>
@@ -144,7 +144,7 @@ export default function HeroSection() {
 
       <div
         ref={cardRef}
-        className="floating-card opacity-0 absolute top-24 right-6 md:right-12 bg-white/95 backdrop-blur-md text-foreground p-6 rounded-3xl w-72 shadow-2xl z-20 hidden lg:block border border-border"
+        className="floating-card opacity-0 absolute top-20 right-4 xl:right-10 bg-white/95 backdrop-blur-md text-foreground p-5 rounded-3xl w-64 shadow-2xl z-20 hidden lg:block border border-border"
       >
         <div className="flex justify-between items-start mb-4">
           <h3 className="text-sm font-bold text-primary leading-tight">Lidaf Consulting Corp.</h3>
