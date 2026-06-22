@@ -55,7 +55,7 @@ export default function HeroSection() {
           </span>
         </div>
 
-        <h1 className="hero-animate opacity-0 text-[clamp(1.35rem,5.8vw,1.8rem)] sm:text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold uppercase tracking-tight sm:tracking-wide leading-[1.18] sm:leading-[1.08] max-w-5xl lg:max-w-[calc(100%-22rem)] xl:max-w-[calc(100%-24rem)] mb-4 sm:mb-6">
+        <h1 className="hero-animate opacity-0 text-[clamp(1.05rem,4.5vw,1.45rem)] sm:text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold uppercase tracking-tight sm:tracking-wide leading-[1.2] sm:leading-[1.08] max-w-5xl lg:max-w-[calc(100%-22rem)] xl:max-w-[calc(100%-24rem)] mb-4 sm:mb-6">
           <span className="block whitespace-nowrap">
             <span className="text-highlight-green">Le temple du management</span>
           </span>
