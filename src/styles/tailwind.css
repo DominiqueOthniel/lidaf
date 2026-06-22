@@ -613,6 +613,148 @@
     box-shadow: 0 16px 40px rgba(107, 79, 160, 0.14);
     transform: translateY(-3px);
   }
+
+  /* ---------- Organigramme ---------- */
+  .org-scroll {
+    overflow-x: auto;
+    padding: 1rem 0.5rem 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .org-tree {
+    min-width: max-content;
+    margin: 0 auto;
+  }
+
+  .org-tree ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    padding-top: 2.75rem;
+  }
+
+  .org-tree li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.75rem 0.875rem 0;
+  }
+
+  /* Horizontal bus connecting sibling nodes */
+  .org-tree li::before,
+  .org-tree li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 2.75rem;
+    border-top: 2px solid #C7D8CB;
+  }
+
+  .org-tree li::before {
+    right: 50%;
+  }
+
+  .org-tree li::after {
+    left: 50%;
+    border-left: 2px solid #C7D8CB;
+  }
+
+  .org-tree li:only-child::before,
+  .org-tree li:only-child::after {
+    display: none;
+  }
+
+  .org-tree li:only-child {
+    padding-top: 2.75rem;
+  }
+
+  .org-tree li:first-child::before,
+  .org-tree li:last-child::after {
+    border: 0 none;
+  }
+
+  .org-tree li:last-child::before {
+    border-right: 2px solid #C7D8CB;
+    border-radius: 0 8px 0 0;
+  }
+
+  .org-tree li:first-child::after {
+    border-radius: 8px 0 0 0;
+  }
+
+  /* Vertical line dropping from a parent node down to its children's bus */
+  .org-tree ul ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 2.75rem;
+    border-left: 2px solid #C7D8CB;
+  }
+
+  .org-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 11.5rem;
+    padding: 1.25rem 1rem 1.125rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px -16px rgba(26, 26, 46, 0.28);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .org-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    box-shadow: 0 22px 44px -18px rgba(27, 94, 32, 0.4);
+  }
+
+  .org-card-root {
+    width: 13rem;
+    border-color: transparent;
+    background: linear-gradient(160deg, #0d2010 0%, #1b5e20 55%, #2e7d32 100%);
+    box-shadow: 0 24px 50px -18px rgba(27, 94, 32, 0.55);
+  }
+
+  .org-card-root:hover {
+    border-color: transparent;
+    box-shadow: 0 30px 60px -20px rgba(27, 94, 32, 0.6);
+  }
+
+  .org-photo {
+    position: relative;
+    height: 5.5rem;
+    width: 5.5rem;
+    border-radius: 9999px;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+  }
+
+  .org-card-root .org-photo {
+    height: 6.5rem;
+    width: 6.5rem;
+    background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.55));
+  }
+
+  .org-photo-inner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: var(--card);
+    border: 3px solid var(--card);
+  }
 }
 
 @keyframes bounce-soft {
