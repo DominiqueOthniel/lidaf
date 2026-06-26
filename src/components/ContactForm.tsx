@@ -7,7 +7,7 @@ import {
   formSubjects,
   primaryPhone,
   telHref,
-  whatsappHref,
+  whatsappContactHref,
 } from '@/config/contact';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -19,7 +19,7 @@ export default function ContactForm() {
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus('loading');
     setErrorMessage('');
@@ -53,55 +53,31 @@ export default function ContactForm() {
       return;
     }
 
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+    const whatsappUrl = whatsappContactHref(payload);
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de l\'envoi du message.');
-      }
-
-      setStatus('success');
-      form.reset();
-    } catch (error) {
-      setStatus('error');
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Erreur lors de l\'envoi du message.'
-      );
-    }
+    setStatus('success');
+    form.reset();
   }
 
   if (status === 'success') {
     return (
       <div className="rounded-2xl sm:rounded-3xl border border-primary/20 bg-primary/5 p-6 sm:p-10 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-          <Icon name="CheckCircleIcon" size={28} className="text-primary" />
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366]/15">
+          <Icon name="ChatBubbleLeftRightIcon" size={28} className="text-[#25D366]" />
         </div>
-        <h3 className="text-xl font-bold text-foreground mb-2">Message envoyé !</h3>
+        <h3 className="text-xl font-bold text-foreground mb-2">WhatsApp ouvert !</h3>
         <p className="text-muted-foreground mb-6">
-          Merci pour votre message. Notre équipe vous répondra sous {contact.responseTime}.
+          Votre message est prêt à être envoyé sur WhatsApp. Notre équipe vous répondra sous{' '}
+          {contact.responseTime}.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button type="button" onClick={() => setStatus('idle')} className="btn-primary">
             Envoyer un autre message
           </button>
-          <a
-            href={whatsappHref()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="whatsapp-btn justify-center"
-          >
-            <Icon name="ChatBubbleLeftRightIcon" size={18} />
-            WhatsApp
-          </a>
         </div>
         <p className="mt-5 text-xs text-muted-foreground">
-          Besoin d&apos;une réponse immédiate ? Appelez le{' '}
+          WhatsApp ne s&apos;est pas ouvert ? Appelez le{' '}
           <a href={telHref(primaryPhone)} className="font-semibold text-primary hover:underline">
             {primaryPhone.display}
           </a>
@@ -112,7 +88,6 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-      {/* Honeypot anti-spam — invisible aux visiteurs */}
       <input
         type="text"
         name="website"
@@ -206,7 +181,7 @@ export default function ContactForm() {
           className="form-input resize-none"
         />
         <p className="mt-1.5 text-xs text-muted-foreground">
-          Minimum {MIN_MESSAGE_LENGTH} caractères
+          Minimum {MIN_MESSAGE_LENGTH} caractères — le message sera envoyé via WhatsApp
         </p>
       </div>
 
@@ -216,39 +191,20 @@ export default function ContactForm() {
           className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
         >
           <p>{errorMessage}</p>
-          <p className="mt-2 text-xs text-red-600/80">
-            Vous pouvez aussi nous joindre au{' '}
-            <a href={telHref(primaryPhone)} className="font-semibold underline">
-              {primaryPhone.display}
-            </a>{' '}
-            ou via{' '}
-            <a
-              href={whatsappHref()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold underline"
-            >
-              WhatsApp
-            </a>
-            .
-          </p>
         </div>
       )}
 
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="btn-primary w-full justify-center py-3.5 text-base disabled:opacity-60 disabled:cursor-not-allowed"
+        className="whatsapp-btn w-full justify-center py-3.5 text-base disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {status === 'loading' ? (
-          <>
-            <Icon name="ArrowPathIcon" size={18} className="animate-spin" />
-            Envoi en cours...
-          </>
+          'Ouverture de WhatsApp...'
         ) : (
           <>
-            Envoyer le message
-            <Icon name="PaperAirplaneIcon" size={18} />
+            Envoyer via WhatsApp
+            <Icon name="ChatBubbleLeftRightIcon" size={18} />
           </>
         )}
       </button>

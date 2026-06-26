@@ -58,3 +58,31 @@ export function whatsappHref(
 export function mapsHref(query: string = contact.address.full) {
   return `https://maps.google.com/?q=${encodeURIComponent(query)}`;
 }
+
+export type ContactFormPayload = {
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+};
+
+export function buildWhatsAppContactMessage(payload: ContactFormPayload) {
+  const lines = [
+    'Bonjour Cabinet Lidaf CCA,',
+    '',
+    '*Nouvelle demande de contact*',
+    `Nom : ${payload.name}`,
+    `Email : ${payload.email}`,
+    ...(payload.phone ? [`Téléphone : ${payload.phone}`] : []),
+    `Sujet : ${payload.subject}`,
+    '',
+    payload.message,
+  ];
+
+  return lines.join('\n');
+}
+
+export function whatsappContactHref(payload: ContactFormPayload) {
+  return whatsappHref(primaryPhone, buildWhatsAppContactMessage(payload));
+}

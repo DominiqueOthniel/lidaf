@@ -50,7 +50,7 @@ export default function HeroSection() {
 
       <div
         ref={contentRef}
-        className="relative z-10 flex flex-col justify-end h-full site-container pt-24 sm:pt-28 md:pt-32 pb-20 sm:pb-24 md:pb-28 min-h-[100svh] lg:pr-[18rem] xl:pr-[20rem]"
+        className="relative z-10 flex flex-col justify-end h-full site-container pt-24 sm:pt-28 md:pt-32 pb-20 sm:pb-24 md:pb-28 min-h-[100svh] lg:pr-[21rem] xl:pr-[23rem]"
       >
         <div className="hero-animate opacity-0 mb-4 sm:mb-5">
           <span className="inline-flex max-w-full flex-wrap items-center gap-2 px-3 py-1.5 sm:px-4 rounded-full border border-white/25 bg-white/10 backdrop-blur-sm text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-widest">
@@ -62,11 +62,11 @@ export default function HeroSection() {
           </span>
         </div>
 
-        <h1 className="hero-animate opacity-0 font-extrabold uppercase tracking-tight sm:tracking-wide leading-[1.15] sm:leading-[1.08] max-w-5xl mb-4 sm:mb-6 text-[clamp(0.9rem,3.6vw,1.35rem)] sm:text-[clamp(2rem,4.8vw,3.75rem)]">
-          <span className="block w-fit whitespace-nowrap">
+        <h1 className="hero-title hero-animate opacity-0 font-extrabold uppercase tracking-tight sm:tracking-wide leading-[1.15] sm:leading-[1.08] mb-4 sm:mb-6">
+          <span className="hero-title-line block">
             <span className="text-highlight-green">Le temple du management</span>
           </span>
-          <span className="mt-1 block w-fit whitespace-nowrap sm:mt-2">
+          <span className="hero-title-line hero-title-line2 mt-1 block sm:mt-2">
             <span className="text-highlight-green">par excellence</span>{' '}
             <span className="text-highlight-accent">des entreprises</span>
           </span>
@@ -152,7 +152,7 @@ export default function HeroSection() {
 
       <div
         ref={cardRef}
-        className="floating-card opacity-0 absolute top-20 right-4 xl:right-10 bg-white/95 backdrop-blur-md text-foreground p-5 rounded-3xl w-64 shadow-2xl z-20 hidden lg:block border border-border"
+        className="floating-card opacity-0 absolute top-20 right-4 xl:right-8 bg-white/95 backdrop-blur-md text-foreground p-5 rounded-3xl w-60 xl:w-64 shadow-2xl z-20 hidden lg:block border border-border"
       >
         <div className="flex justify-between items-start mb-4">
           <h3 className="text-sm font-bold text-primary leading-tight">Lidaf Consulting Corp.</h3>

@@ -62,7 +62,7 @@ export default function ContactPage() {
             Parlons de votre <span className="text-highlight-green">projet</span>
           </>
         }
-        description={`Remplissez le formulaire ou contactez-nous directement. Réponse garantie sous ${contact.responseTime}.`}
+        description={`Remplissez le formulaire : votre message s'ouvre directement sur WhatsApp. Réponse garantie sous ${contact.responseTime}.`}
       />
 
       <section className="pb-12 sm:pb-16 md:pb-20 -mt-6 sm:-mt-8 relative z-10">
@@ -75,9 +75,9 @@ export default function ContactPage() {
                     <Icon name="PaperAirplaneIcon" size={20} className="text-primary" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold text-foreground">Envoyez-nous un message</h2>
+                    <h2 className="text-lg font-bold text-foreground">Contactez-nous via WhatsApp</h2>
                     <p className="text-xs text-muted-foreground">
-                      Tous les champs marqués * sont obligatoires
+                      Remplissez le formulaire, puis envoyez sur WhatsApp
                     </p>
                   </div>
                 </div>
