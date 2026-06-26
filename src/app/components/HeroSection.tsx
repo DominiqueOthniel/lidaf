@@ -4,6 +4,13 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
+import {
+  contact,
+  mailtoHref,
+  mapsHref,
+  telHref,
+  whatsappHref,
+} from '@/config/contact';
 
 export default function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
@@ -43,7 +50,7 @@ export default function HeroSection() {
 
       <div
         ref={contentRef}
-        className="relative z-10 flex flex-col justify-end h-full site-container pt-24 sm:pt-28 md:pt-32 pb-20 sm:pb-24 md:pb-28 min-h-[100svh]"
+        className="relative z-10 flex flex-col justify-end h-full site-container pt-24 sm:pt-28 md:pt-32 pb-20 sm:pb-24 md:pb-28 min-h-[100svh] lg:pr-[18rem] xl:pr-[20rem]"
       >
         <div className="hero-animate opacity-0 mb-4 sm:mb-5">
           <span className="inline-flex max-w-full flex-wrap items-center gap-2 px-3 py-1.5 sm:px-4 rounded-full border border-white/25 bg-white/10 backdrop-blur-sm text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-widest">
@@ -55,8 +62,8 @@ export default function HeroSection() {
           </span>
         </div>
 
-        <h1 className="hero-animate opacity-0 text-[clamp(1.05rem,4.5vw,1.45rem)] sm:text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold uppercase tracking-tight sm:tracking-wide leading-[1.2] sm:leading-[1.08] max-w-5xl lg:max-w-[calc(100%-22rem)] xl:max-w-[calc(100%-24rem)] mb-4 sm:mb-6">
-          <span className="block whitespace-nowrap">
+        <h1 className="hero-animate opacity-0 font-extrabold uppercase tracking-tight sm:tracking-wide leading-[1.15] sm:leading-[1.08] max-w-5xl mb-4 sm:mb-6 text-[clamp(0.9rem,3.6vw,1.35rem)] sm:text-[clamp(2rem,4.8vw,3.75rem)]">
+          <span className="block w-fit whitespace-nowrap">
             <span className="text-highlight-green">Le temple du management</span>
           </span>
           <span className="mt-1 block w-fit whitespace-nowrap sm:mt-2">
@@ -103,20 +110,26 @@ export default function HeroSection() {
         </div>
 
         <div className="hero-animate opacity-0 mt-6 lg:hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-sm p-4">
-          <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-3 text-white/90">
-            <a href="tel:+237674574133" className="flex items-center gap-2 text-xs font-semibold min-h-[44px]">
-              <Icon name="PhoneIcon" size={16} className="text-green-400 flex-shrink-0" />
-              <span>674 574 133</span>
-            </a>
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-3 text-white/90">
+            {contact.phones.map((phone) => (
+              <a
+                key={phone.tel}
+                href={telHref(phone)}
+                className="flex items-center gap-2 text-xs font-semibold min-h-[44px]"
+              >
+                <Icon name="PhoneIcon" size={16} className="text-green-400 flex-shrink-0" />
+                <span>{phone.display}</span>
+              </a>
+            ))}
             <a
-              href="mailto:cabinetlidaf@gmail.com"
+              href={mailtoHref()}
               className="flex items-center gap-2 text-xs font-semibold min-h-[44px] break-all"
             >
               <Icon name="EnvelopeIcon" size={16} className="text-green-400 flex-shrink-0" />
-              <span className="truncate">cabinetlidaf@gmail.com</span>
+              <span className="truncate">{contact.email}</span>
             </a>
             <a
-              href="https://wa.me/237674574133"
+              href={whatsappHref()}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-xs font-semibold min-h-[44px]"
@@ -148,20 +161,37 @@ export default function HeroSection() {
           </div>
         </div>
         <div className="space-y-3 text-xs">
-          <div className="flex items-start gap-2.5">
+          <a
+            href={mapsHref()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-start gap-2.5 group/link"
+          >
             <Icon name="MapPinIcon" size={14} className="text-accent mt-0.5 flex-shrink-0" />
-            <p className="text-muted-foreground">4851 Douala, Bonapriso, Cameroun</p>
-          </div>
+            <p className="text-muted-foreground group-hover/link:text-primary transition-colors">
+              {contact.address.full}
+            </p>
+          </a>
           <div className="flex items-start gap-2.5">
             <Icon name="PhoneIcon" size={14} className="text-accent mt-0.5 flex-shrink-0" />
-            <div className="text-muted-foreground">
-              <p>674 574 133</p>
+            <div className="text-muted-foreground space-y-0.5">
+              {contact.phones.map((phone) => (
+                <a
+                  key={phone.tel}
+                  href={telHref(phone)}
+                  className="block hover:text-primary transition-colors"
+                >
+                  {phone.display}
+                </a>
+              ))}
             </div>
           </div>
-          <div className="flex items-start gap-2.5">
+          <a href={mailtoHref()} className="flex items-start gap-2.5 group/link">
             <Icon name="EnvelopeIcon" size={14} className="text-accent mt-0.5 flex-shrink-0" />
-            <p className="text-muted-foreground break-all">cabinetlidaf@gmail.com</p>
-          </div>
+            <p className="text-muted-foreground break-all group-hover/link:text-primary transition-colors">
+              {contact.email}
+            </p>
+          </a>
         </div>
         <div className="mt-5 pt-4 border-t border-border">
           <p className="text-[10px] italic text-muted-foreground leading-relaxed">
@@ -169,7 +199,7 @@ export default function HeroSection() {
           </p>
         </div>
         <a
-          href="https://wa.me/237674574133"
+          href={whatsappHref()}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-4 flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-2.5 rounded-xl transition-colors min-h-[44px]"

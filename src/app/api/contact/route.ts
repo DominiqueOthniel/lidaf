@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { formSubjects } from '@/config/contact';
 
 interface ContactPayload {
   name?: string;
@@ -7,7 +8,11 @@ interface ContactPayload {
   phone?: string;
   subject?: string;
   message?: string;
+  website?: string;
 }
+
+const MIN_MESSAGE_LENGTH = 10;
+const MAX_MESSAGE_LENGTH = 5000;
 
 function escapeHtml(text: string): string {
   return text
@@ -20,6 +25,11 @@ function escapeHtml(text: string): string {
 export async function POST(request: Request) {
   try {
     const body: ContactPayload = await request.json();
+
+    if (body.website?.trim()) {
+      return NextResponse.json({ success: true });
+    }
+
     const name = body.name?.trim();
     const email = body.email?.trim();
     const phone = body.phone?.trim();
@@ -33,9 +43,29 @@ export async function POST(request: Request) {
       );
     }
 
+    if (name.length < 2 || name.length > 100) {
+      return NextResponse.json(
+        { error: 'Le nom doit contenir entre 2 et 100 caractères.' },
+        { status: 400 }
+      );
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json({ error: 'Adresse email invalide.' }, { status: 400 });
+    }
+
+    if (!formSubjects.includes(subject as (typeof formSubjects)[number])) {
+      return NextResponse.json({ error: 'Sujet invalide.' }, { status: 400 });
+    }
+
+    if (message.length < MIN_MESSAGE_LENGTH || message.length > MAX_MESSAGE_LENGTH) {
+      return NextResponse.json(
+        {
+          error: `Le message doit contenir entre ${MIN_MESSAGE_LENGTH} et ${MAX_MESSAGE_LENGTH} caractères.`,
+        },
+        { status: 400 }
+      );
     }
 
     const apiKey = process.env.RESEND_API_KEY;

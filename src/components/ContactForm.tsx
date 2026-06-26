@@ -2,8 +2,18 @@
 
 import React, { useState } from 'react';
 import Icon from '@/components/ui/AppIcon';
+import {
+  contact,
+  formSubjects,
+  primaryPhone,
+  telHref,
+  whatsappHref,
+} from '@/config/contact';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
+
+const MIN_MESSAGE_LENGTH = 10;
+const MAX_MESSAGE_LENGTH = 5000;
 
 export default function ContactForm() {
   const [status, setStatus] = useState<FormStatus>('idle');
@@ -16,13 +26,32 @@ export default function ContactForm() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+
+    if (formData.get('website')) {
+      setStatus('success');
+      form.reset();
+      return;
+    }
+
     const payload = {
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
+      name: (formData.get('name') as string).trim(),
+      email: (formData.get('email') as string).trim(),
+      phone: (formData.get('phone') as string).trim(),
       subject: formData.get('subject') as string,
-      message: formData.get('message') as string,
+      message: (formData.get('message') as string).trim(),
     };
+
+    if (payload.message.length < MIN_MESSAGE_LENGTH) {
+      setStatus('error');
+      setErrorMessage(`Le message doit contenir au moins ${MIN_MESSAGE_LENGTH} caractères.`);
+      return;
+    }
+
+    if (payload.message.length > MAX_MESSAGE_LENGTH) {
+      setStatus('error');
+      setErrorMessage(`Le message ne peut pas dépasser ${MAX_MESSAGE_LENGTH} caractères.`);
+      return;
+    }
 
     try {
       const response = await fetch('/api/contact', {
@@ -41,7 +70,9 @@ export default function ContactForm() {
       form.reset();
     } catch (error) {
       setStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'Erreur lors de l\'envoi du message.');
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Erreur lors de l\'envoi du message.'
+      );
     }
   }
 
@@ -53,21 +84,44 @@ export default function ContactForm() {
         </div>
         <h3 className="text-xl font-bold text-foreground mb-2">Message envoyé !</h3>
         <p className="text-muted-foreground mb-6">
-          Merci pour votre message. Notre équipe vous répondra dans les 24 heures.
+          Merci pour votre message. Notre équipe vous répondra sous {contact.responseTime}.
         </p>
-        <button
-          type="button"
-          onClick={() => setStatus('idle')}
-          className="btn-primary"
-        >
-          Envoyer un autre message
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button type="button" onClick={() => setStatus('idle')} className="btn-primary">
+            Envoyer un autre message
+          </button>
+          <a
+            href={whatsappHref()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="whatsapp-btn justify-center"
+          >
+            <Icon name="ChatBubbleLeftRightIcon" size={18} />
+            WhatsApp
+          </a>
+        </div>
+        <p className="mt-5 text-xs text-muted-foreground">
+          Besoin d&apos;une réponse immédiate ? Appelez le{' '}
+          <a href={telHref(primaryPhone)} className="font-semibold text-primary hover:underline">
+            {primaryPhone.display}
+          </a>
+        </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+      {/* Honeypot anti-spam — invisible aux visiteurs */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute opacity-0 pointer-events-none h-0 w-0"
+      />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label htmlFor="name" className="mb-1.5 block text-sm font-semibold text-foreground">
@@ -78,6 +132,8 @@ export default function ContactForm() {
             name="name"
             type="text"
             required
+            minLength={2}
+            maxLength={100}
             disabled={status === 'loading'}
             placeholder="Votre nom"
             className="form-input"
@@ -125,12 +181,11 @@ export default function ContactForm() {
             className="form-input"
           >
             <option value="">Choisir un sujet</option>
-            <option value="Fiscalité">Fiscalité</option>
-            <option value="Comptabilité">Comptabilité</option>
-            <option value="Gestion de projets">Gestion de projets</option>
-            <option value="Formations">Formations</option>
-            <option value="Logistique & Transit">Logistique & Transit</option>
-            <option value="Autre">Autre</option>
+            {formSubjects.map((subject) => (
+              <option key={subject} value={subject}>
+                {subject}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -143,16 +198,40 @@ export default function ContactForm() {
           id="message"
           name="message"
           required
+          minLength={MIN_MESSAGE_LENGTH}
+          maxLength={MAX_MESSAGE_LENGTH}
           rows={6}
           disabled={status === 'loading'}
           placeholder="Décrivez votre besoin..."
           className="form-input resize-none"
         />
+        <p className="mt-1.5 text-xs text-muted-foreground">
+          Minimum {MIN_MESSAGE_LENGTH} caractères
+        </p>
       </div>
 
       {status === 'error' && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {errorMessage}
+        <div
+          role="alert"
+          className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          <p>{errorMessage}</p>
+          <p className="mt-2 text-xs text-red-600/80">
+            Vous pouvez aussi nous joindre au{' '}
+            <a href={telHref(primaryPhone)} className="font-semibold underline">
+              {primaryPhone.display}
+            </a>{' '}
+            ou via{' '}
+            <a
+              href={whatsappHref()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold underline"
+            >
+              WhatsApp
+            </a>
+            .
+          </p>
         </div>
       )}
 
@@ -162,7 +241,10 @@ export default function ContactForm() {
         className="btn-primary w-full justify-center py-3.5 text-base disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {status === 'loading' ? (
-          'Envoi en cours...'
+          <>
+            <Icon name="ArrowPathIcon" size={18} className="animate-spin" />
+            Envoi en cours...
+          </>
         ) : (
           <>
             Envoyer le message

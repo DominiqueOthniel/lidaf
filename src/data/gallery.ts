@@ -1,9 +1,38 @@
+export type GalleryFocus = 'top' | 'center';
+
 export type GalleryItem = {
   src: string;
   title: string;
   tag: string;
   span?: string;
+  focus?: GalleryFocus;
 };
+
+const FACE_PRIORITY_TAGS = new Set([
+  'Équipe',
+  'Direction',
+  'Formation',
+  'Terrain',
+  'Conférence',
+  'Médias',
+  'Institutionnel',
+  'Partenaires',
+  'Programme',
+  'Conseil',
+]);
+
+const FACE_PRIORITY_KEYWORDS = /portrait|interview|équipe|pdg|remise|audience|panel|groupe|direction|bénéficiaire|partenaire|animation|cérémonie/i;
+
+export function getGalleryFocus(tag: string, title: string): GalleryFocus {
+  if (FACE_PRIORITY_TAGS.has(tag) || FACE_PRIORITY_KEYWORDS.test(title)) {
+    return 'top';
+  }
+  return 'center';
+}
+
+function withFocus(item: Omit<GalleryItem, 'focus'> & Partial<Pick<GalleryItem, 'focus'>>): GalleryItem {
+  return { ...item, focus: item.focus ?? getGalleryFocus(item.tag, item.title) };
+}
 
 const baseGalleryItems: GalleryItem[] = [
   { src: '/assets/images/gallery/gallery-01.jpg', title: 'Couverture média', tag: 'Médias', span: 'md:col-span-2' },
@@ -36,6 +65,9 @@ const baseGalleryItems: GalleryItem[] = [
   { src: '/assets/images/gallery/gallery-28.jpg', title: 'Distinction et partenaires', tag: 'Partenaires', span: 'md:col-span-2' },
   { src: '/assets/images/gallery/gallery-29.jpg', title: 'Remise officielle', tag: 'Institutionnel' },
   { src: '/assets/images/gallery/gallery-30.jpg', title: 'Bureau et accueil', tag: 'Bureau', span: 'lg:col-span-2' },
+  { src: '/assets/images/gallery/gallery-77.jpg', title: 'Portrait professionnel', tag: 'Équipe', focus: 'top' },
+  { src: '/assets/images/gallery/gallery-78.jpg', title: 'Animation de formation PADESCE', tag: 'Formation', span: 'md:col-span-2', focus: 'top' },
+  { src: '/assets/images/gallery/gallery-79.jpg', title: 'Remise de certificat PADESCE', tag: 'Formation', focus: 'top' },
 ];
 
 const extraTitles = [
@@ -107,7 +139,7 @@ function buildExtraGalleryItems(startIndex: number, count: number): GalleryItem[
     const index = startIndex + offset;
     const layoutIndex = index - 1;
 
-    return {
+    return withFocus({
       src: `/assets/images/gallery/gallery-${String(index).padStart(2, '0')}.jpg`,
       title: extraTitles[offset % extraTitles.length],
       tag: extraTags[offset % extraTags.length],
@@ -117,11 +149,11 @@ function buildExtraGalleryItems(startIndex: number, count: number): GalleryItem[
           : layoutIndex % 7 === 3
             ? 'lg:col-span-2'
             : undefined,
-    };
+    });
   });
 }
 
 export const galleryItems: GalleryItem[] = [
-  ...baseGalleryItems,
+  ...baseGalleryItems.map(withFocus),
   ...buildExtraGalleryItems(31, 46),
 ];

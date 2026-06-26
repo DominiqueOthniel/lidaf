@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
+import { whatsappHref } from '@/config/contact';
 
 export default function HomeCTA() {
   return (
@@ -30,7 +31,7 @@ export default function HomeCTA() {
                 <Icon name="ArrowUpRightIcon" size={16} />
               </Link>
               <a
-                href="https://wa.me/237674574133"
+                href={whatsappHref()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="whatsapp-btn justify-center w-full sm:w-auto text-sm sm:text-base"

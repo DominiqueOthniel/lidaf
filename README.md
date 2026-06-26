@@ -24,6 +24,19 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## Configuration
+
+Copiez `.env.example` vers `.env` et renseignez les variables :
+
+| Variable | Description |
+| -------- | ----------- |
+| `NEXT_PUBLIC_SITE_URL` | URL publique du site |
+| `RESEND_API_KEY` | Clé API Resend (formulaire de contact) |
+| `RESEND_FROM_EMAIL` | Email expéditeur vérifié chez Resend |
+| `CONTACT_EMAIL` | Email destinataire des messages |
+
+Les coordonnées (téléphones, email, adresse) sont centralisées dans `src/config/contact.ts`.
+
 ## Project Structure
 
 ```

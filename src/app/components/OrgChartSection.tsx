@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
@@ -6,163 +8,170 @@ import Icon from '@/components/ui/AppIcon';
 type Member = {
   name: string;
   role: string;
-  department?: string;
+  department: string;
+  icon: string;
   photo?: string;
-  children?: Member[];
 };
 
 const AVATAR_FALLBACK = '/assets/images/team/avatar-placeholder.svg';
 
-// NOTE : Remplacez les noms / rôles / photos ci-dessous par les informations
-// réelles des membres. Déposez les photos dans /public/assets/images/team/.
-const organisation: Member = {
+// NOTE : Remplacez les noms / rôles / photos par les informations réelles.
+// Déposez les photos dans /public/assets/images/team/.
+const pdg: Member = {
   name: 'Dr. Fadil Garba',
   role: 'Président Directeur Général',
   department: 'Direction Générale',
+  icon: 'BuildingOffice2Icon',
   photo: '/assets/images/leadership/pdg-fadil-garba.jpg',
-  children: [
-    {
-      name: 'Nom Prénom',
-      role: 'Directeur Général Adjoint',
-      department: 'Coordination',
-      photo: '/assets/images/team/dga.jpg',
-    },
-    {
-      name: 'Nom Prénom',
-      role: 'Directrice Administrative & Financière',
-      department: 'Finances & RH',
-      photo: '/assets/images/team/daf.jpg',
-      children: [
-        {
-          name: 'Nom Prénom',
-          role: 'Responsable Comptabilité',
-          photo: '/assets/images/team/comptabilite.jpg',
-        },
-        {
-          name: 'Nom Prénom',
-          role: 'Chargé(e) RH',
-          photo: '/assets/images/team/rh.jpg',
-        },
-      ],
-    },
-    {
-      name: 'Nom Prénom',
-      role: 'Directeur Conseil & Stratégie',
-      department: 'Consulting',
-      photo: '/assets/images/team/conseil.jpg',
-      children: [
-        {
-          name: 'Nom Prénom',
-          role: 'Consultant Senior',
-          photo: '/assets/images/team/consultant.jpg',
-        },
-        {
-          name: 'Nom Prénom',
-          role: 'Analyste',
-          photo: '/assets/images/team/analyste.jpg',
-        },
-      ],
-    },
-    {
-      name: 'Nom Prénom',
-      role: 'Responsable Formation',
-      department: 'Capital Humain',
-      photo: '/assets/images/team/formation.jpg',
-    },
-  ],
 };
 
-function OrgNode({ member, isRoot = false }: { member: Member; isRoot?: boolean }) {
-  const hasChildren = !!member.children?.length;
+const reports: Member[] = [
+  {
+    name: 'Nom Prénom',
+    role: 'Directrice Administrative & Financière',
+    department: 'Finances & RH',
+    icon: 'BanknotesIcon',
+    photo: '/assets/images/team/daf.jpg',
+  },
+  {
+    name: 'Nom Prénom',
+    role: 'Directeur Conseil & Stratégie',
+    department: 'Consulting',
+    icon: 'PresentationChartLineIcon',
+    photo: '/assets/images/team/conseil.jpg',
+  },
+  {
+    name: 'Pougom Dominique',
+    role: 'Ingénieure informaticienne',
+    department: 'Informatique',
+    icon: 'ComputerDesktopIcon',
+    photo: '/assets/images/team/dominique-pougom.jpg',
+  },
+  {
+    name: 'Otiomoko Landry',
+    role: 'Chargé de mission polyvalente',
+    department: 'Missions',
+    icon: 'ClipboardDocumentCheckIcon',
+    photo: '/assets/images/team/landry-org.jpg',
+  },
+];
 
+function MemberCard({ member, isRoot = false }: { member: Member; isRoot?: boolean }) {
   return (
-    <li>
-      <div className={`org-card group ${isRoot ? 'org-card-root' : ''}`}>
-        {isRoot && (
-          <span className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-accent px-3 py-1 text-[0.625rem] font-bold uppercase tracking-widest text-white shadow-md">
-            <Icon name="StarIcon" variant="solid" size={11} />
-            Direction
-          </span>
-        )}
+    <div className={`oc-card group ${isRoot ? 'oc-root' : ''}`}>
+      {!isRoot && (
+        <Icon name={member.icon} size={64} className="oc-watermark" />
+      )}
 
-        <div className="org-photo">
-          <div className="org-photo-inner">
-            <AppImage
-              src={member.photo || AVATAR_FALLBACK}
-              alt={`Portrait de ${member.name}, ${member.role} au Cabinet Lidaf CCA`}
-              fill
-              fallbackSrc={AVATAR_FALLBACK}
-              className="object-cover object-center"
-              sizes="120px"
-            />
-          </div>
+      {isRoot && (
+        <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[0.625rem] font-bold uppercase tracking-widest text-white backdrop-blur-sm">
+          <Icon name="StarIcon" variant="solid" size={11} />
+          Direction Générale
+        </span>
+      )}
+
+      <div className="oc-photo">
+        <div className="oc-photo-inner">
+          <AppImage
+            src={member.photo || AVATAR_FALLBACK}
+            alt={`Portrait de ${member.name}, ${member.role} au Cabinet Lidaf CCA`}
+            fill
+            unoptimized
+            fallbackSrc={AVATAR_FALLBACK}
+            className="object-cover object-top transition-transform duration-500 group-hover:scale-110"
+            sizes="120px"
+          />
         </div>
-
-        {member.department && (
-          <p
-            className={`mt-3 text-[0.625rem] font-bold uppercase tracking-widest ${
-              isRoot ? 'text-white/70' : 'text-accent'
-            }`}
-          >
-            {member.department}
-          </p>
-        )}
-
-        <h3
-          className={`mt-1 text-sm font-extrabold leading-snug ${
-            isRoot ? 'text-white' : 'text-foreground'
-          }`}
-        >
-          {member.name}
-        </h3>
-
-        <p
-          className={`mt-1 text-xs leading-snug ${
-            isRoot ? 'text-white/75' : 'text-muted-foreground'
-          }`}
-        >
-          {member.role}
-        </p>
       </div>
 
-      {hasChildren && (
-        <ul>
-          {member.children!.map((child, index) => (
-            <OrgNode key={`${child.role}-${index}`} member={child} />
-          ))}
-        </ul>
+      {!isRoot && (
+        <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-widest text-accent">
+          <Icon name={member.icon} size={11} />
+          {member.department}
+        </span>
       )}
-    </li>
+
+      <h3
+        className={`text-base font-extrabold leading-snug ${
+          isRoot ? 'mt-4 text-lg text-white' : 'mt-2 text-foreground'
+        }`}
+      >
+        {member.name}
+      </h3>
+
+      <p
+        className={`mt-1 text-xs leading-snug ${
+          isRoot ? 'text-white/75' : 'text-muted-foreground'
+        }`}
+      >
+        {member.role}
+      </p>
+    </div>
   );
 }
 
 export default function OrgChartSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target
+              .querySelectorAll('.reveal-up')
+              .forEach((el) => el.classList.add('visible'));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="py-16 sm:py-20 md:py-24 bg-background">
+    <section ref={sectionRef} className="py-16 sm:py-20 md:py-24 bg-background">
       <div className="site-container">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="section-eyebrow mb-5">
+          <span className="section-eyebrow mb-5 reveal-up">
             <Icon name="UserGroupIcon" size={12} />
             Notre Organigramme
           </span>
-          <h2 className="text-section-title font-extrabold tracking-tight text-foreground leading-tight">
+          <h2 className="text-section-title font-extrabold tracking-tight text-foreground leading-tight reveal-up">
             Les femmes et les hommes derrière Lidaf CCA.
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground reveal-up">
             Une équipe pluridisciplinaire structurée autour d&apos;une direction de terrain,
             pour vous accompagner du diagnostic jusqu&apos;aux résultats.
           </p>
         </div>
 
-        <div className="org-scroll mt-12">
-          <div className="org-tree">
-            <ul>
-              <OrgNode member={organisation} isRoot />
-            </ul>
+        <div className="oc mt-12">
+          <div className="reveal-up w-full max-w-xs mx-auto">
+            <MemberCard member={pdg} isRoot />
+          </div>
+
+          <div className="oc-trunk reveal-up" aria-hidden="true" />
+
+          <p className="oc-level-badge reveal-up">Équipe dirigeante · 4 directions</p>
+
+          <div className="oc-reports">
+            {reports.map((member, index) => (
+              <div
+                key={`${member.role}-${member.name}`}
+                className="oc-item reveal-up"
+                style={{ transitionDelay: `${index * 110}ms` }}
+              >
+                <MemberCard member={member} />
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="mt-12 flex justify-center">
+        <div className="mt-12 flex justify-center reveal-up">
           <Link href="/contact" className="btn-primary">
             Travailler avec notre équipe
             <Icon name="ArrowUpRightIcon" size={16} />

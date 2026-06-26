@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import PageHero from '@/components/PageHero';
-import AppImage from '@/components/ui/AppImage';
+import GalleryGrid from '@/components/GalleryGrid';
 import Icon from '@/components/ui/AppIcon';
 import { galleryItems } from '@/data/gallery';
 
@@ -38,36 +38,12 @@ export default function GaleriePage() {
               </h2>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Chaque image sert à montrer une preuve concrète : terrain, formation, institutionnel,
-              médias ou identité du cabinet.
+              Cliquez sur une photo pour l&apos;aperçu complet. Les visages sont priorisés dans les
+              vignettes.
             </p>
           </div>
 
-          <div className="grid auto-rows-[16rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {galleryItems.map((item, index) => (
-              <article
-                key={item.src}
-                className={`group relative overflow-hidden rounded-3xl border border-border bg-card shadow-sm ${
-                  item.span ?? ''
-                } ${index % 7 === 0 ? 'sm:row-span-2' : ''}`}
-              >
-                <AppImage
-                  src={item.src}
-                  alt={item.title}
-                  fill
-                  className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                  <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-widest backdrop-blur-sm">
-                    {item.tag}
-                  </span>
-                  <h3 className="mt-2 text-lg font-extrabold leading-tight">{item.title}</h3>
-                </div>
-              </article>
-            ))}
-          </div>
+          <GalleryGrid items={galleryItems} />
         </div>
       </section>
     </main>

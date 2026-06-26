@@ -573,6 +573,177 @@
     box-shadow: 0 8px 24px rgba(27, 94, 32, 0.1);
     transform: translateY(-2px);
   }
+
+  /* ---------- Galerie : vignettes + lightbox ---------- */
+  .gallery-card {
+    cursor: zoom-in;
+    width: 100%;
+    padding: 0;
+    display: block;
+  }
+
+  .gallery-card-zoom {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+
+  .gallery-card:hover .gallery-card-zoom,
+  .gallery-card:focus-visible .gallery-card-zoom {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .gallery-card:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
+
+  .gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .gallery-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 20, 0.88);
+    backdrop-filter: blur(8px);
+    animation: gallery-fade-in 0.25s ease;
+  }
+
+  .gallery-lightbox-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 72rem;
+    max-height: calc(100svh - 2rem);
+    animation: gallery-scale-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gallery-lightbox-image-wrap {
+    position: relative;
+    width: 100%;
+    height: min(72svh, 52rem);
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #0a0a12;
+  }
+
+  .gallery-lightbox-caption {
+    margin-top: 1rem;
+    text-align: center;
+    color: #fff;
+    max-width: 36rem;
+  }
+
+  .gallery-lightbox-tag {
+    display: inline-flex;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .gallery-lightbox-title {
+    margin-top: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .gallery-lightbox-counter {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .gallery-lightbox-close {
+    position: absolute;
+    top: max(1rem, env(safe-area-inset-top));
+    right: max(1rem, env(safe-area-inset-right));
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .gallery-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .gallery-lightbox-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-top: -1.375rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .gallery-lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .gallery-lightbox-nav-prev {
+    left: max(0.75rem, env(safe-area-inset-left));
+  }
+
+  .gallery-lightbox-nav-next {
+    right: max(0.75rem, env(safe-area-inset-right));
+  }
+
+  @media (min-width: 640px) {
+    .gallery-lightbox-nav-prev {
+      left: 1.5rem;
+    }
+
+    .gallery-lightbox-nav-next {
+      right: 1.5rem;
+    }
+  }
 }
 
 @layer components {
@@ -614,146 +785,361 @@
     transform: translateY(-3px);
   }
 
-  /* ---------- Organigramme ---------- */
-  .org-scroll {
-    overflow-x: auto;
-    padding: 1rem 0.5rem 0.5rem;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .org-tree {
-    min-width: max-content;
-    margin: 0 auto;
-  }
-
-  .org-tree ul {
-    display: flex;
-    justify-content: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    padding-top: 2.75rem;
-  }
-
-  .org-tree li {
-    position: relative;
+  /* ---------- Organigramme (responsive, compact) ---------- */
+  .oc {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2.75rem 0.875rem 0;
+    width: 100%;
   }
 
-  /* Horizontal bus connecting sibling nodes */
-  .org-tree li::before,
-  .org-tree li::after {
+  /* Connector trunk descending from the PDG card */
+  .oc-trunk {
+    position: relative;
+    width: 2px;
+    height: 2.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(to bottom, var(--primary), rgba(107, 79, 160, 0.35));
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .oc-trunk::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    border-radius: 9999px;
+    background: var(--accent);
+    box-shadow: 0 0 10px 2px rgba(107, 79, 160, 0.55);
+    animation: oc-flow 2.4s ease-in-out infinite;
+  }
+
+  /* Level label — groups the 4 peers under the boss */
+  .oc-level-badge {
+    position: relative;
+    z-index: 2;
+    margin: -0.25rem 0 0;
+    padding: 0.35rem 0.875rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(107, 79, 160, 0.08);
+    border: 1px solid rgba(107, 79, 160, 0.2);
+    border-radius: 9999px;
+    text-align: center;
+  }
+
+  /* Reports: 2×2 on mobile, 4-wide on desktop */
+  .oc-reports {
+    position: relative;
+    width: 100%;
+    max-width: 34rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 2.25rem;
+    margin-top: 0;
+  }
+
+  /* Horizontal bus joining sibling nodes */
+  .oc-reports::before {
     content: '';
     position: absolute;
     top: 0;
-    width: 50%;
-    height: 2.75rem;
-    border-top: 2px solid #C7D8CB;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(27, 94, 32, 0.45) 15%,
+      rgba(107, 79, 160, 0.45) 85%,
+      transparent
+    );
   }
 
-  .org-tree li::before {
-    right: 50%;
+  .oc-item {
+    position: relative;
   }
 
-  .org-tree li::after {
-    left: 50%;
-    border-left: 2px solid #C7D8CB;
-  }
-
-  .org-tree li:only-child::before,
-  .org-tree li:only-child::after {
-    display: none;
-  }
-
-  .org-tree li:only-child {
-    padding-top: 2.75rem;
-  }
-
-  .org-tree li:first-child::before,
-  .org-tree li:last-child::after {
-    border: 0 none;
-  }
-
-  .org-tree li:last-child::before {
-    border-right: 2px solid #C7D8CB;
-    border-radius: 0 8px 0 0;
-  }
-
-  .org-tree li:first-child::after {
-    border-radius: 8px 0 0 0;
-  }
-
-  /* Vertical line dropping from a parent node down to its children's bus */
-  .org-tree ul ul::before {
+  /* Vertical drop from bus down to each card */
+  .oc-item::before {
     content: '';
     position: absolute;
-    top: 0;
+    top: -2.25rem;
     left: 50%;
-    width: 0;
-    height: 2.75rem;
-    border-left: 2px solid #C7D8CB;
+    width: 2px;
+    height: 2.25rem;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, rgba(27, 94, 32, 0.45), rgba(107, 79, 160, 0.45));
   }
 
-  .org-card {
+  /* Node dot on the bus */
+  .oc-item::after {
+    content: '';
+    position: absolute;
+    top: calc(-2.25rem - 4px);
+    left: 50%;
+    width: 9px;
+    height: 9px;
+    margin-left: -4.5px;
+    border-radius: 9999px;
+    background: var(--card);
+    border: 2px solid var(--primary);
+    z-index: 1;
+  }
+
+  @media (min-width: 640px) {
+    .oc-reports {
+      gap: 1.25rem;
+      padding-top: 2.5rem;
+    }
+
+    .oc-item::before {
+      top: -2.5rem;
+      height: 2.5rem;
+    }
+
+    .oc-item::after {
+      top: calc(-2.5rem - 4px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .oc-level-badge {
+      display: none;
+    }
+
+    .oc-reports {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      max-width: 66rem;
+      gap: 1.5rem;
+      padding-top: 2.75rem;
+      margin-top: 0;
+    }
+
+    .oc-reports::before {
+      left: 12.5%;
+      right: 12.5%;
+    }
+
+    .oc-item::before {
+      top: -2.75rem;
+      height: 2.75rem;
+    }
+
+    .oc-item::after {
+      top: calc(-2.75rem - 4px);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .oc-card {
+      padding: 1.15rem 0.75rem 1rem;
+    }
+
+    .oc-photo {
+      height: 4.75rem;
+      width: 4.75rem;
+    }
+
+    .oc-root {
+      max-width: 17rem;
+      padding: 1.5rem 1.25rem 1.35rem;
+    }
+
+    .oc-root .oc-photo {
+      height: 6.25rem;
+      width: 6.25rem;
+    }
+  }
+
+  /* ---- Cards ---- */
+  .oc-card {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 11.5rem;
-    padding: 1.25rem 1rem 1.125rem;
+    height: 100%;
+    padding: 1.5rem 1.1rem 1.35rem;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 1.5rem;
-    box-shadow: 0 10px 30px -16px rgba(26, 26, 46, 0.28);
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px -16px rgba(26, 26, 46, 0.3);
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
   }
 
-  .org-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--primary);
-    box-shadow: 0 22px 44px -18px rgba(27, 94, 32, 0.4);
-  }
-
-  .org-card-root {
-    width: 13rem;
-    border-color: transparent;
-    background: linear-gradient(160deg, #0d2010 0%, #1b5e20 55%, #2e7d32 100%);
-    box-shadow: 0 24px 50px -18px rgba(27, 94, 32, 0.55);
-  }
-
-  .org-card-root:hover {
-    border-color: transparent;
-    box-shadow: 0 30px 60px -20px rgba(27, 94, 32, 0.6);
-  }
-
-  .org-photo {
-    position: relative;
-    height: 5.5rem;
-    width: 5.5rem;
-    border-radius: 9999px;
-    padding: 3px;
+  /* Gradient border revealed on hover */
+  .oc-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
     background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
   }
 
-  .org-card-root .org-photo {
-    height: 6.5rem;
-    width: 6.5rem;
-    background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.55));
+  /* Top accent bar growing on hover */
+  .oc-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    border-radius: 0 0 4px 4px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    transition: width 0.4s ease;
   }
 
-  .org-photo-inner {
-    position: relative;
-    height: 100%;
+  .oc-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 26px 50px -20px rgba(27, 94, 32, 0.45);
+  }
+
+  .oc-card:hover::before {
+    opacity: 1;
+  }
+
+  .oc-card:hover::after {
+    width: 64%;
+  }
+
+  /* Root (PDG) card */
+  .oc-root {
     width: 100%;
+    max-width: 20rem;
+    padding: 1.85rem 1.5rem 1.6rem;
+    border: 0;
+    color: #fff;
+    background:
+      radial-gradient(120% 120% at 50% 0%, rgba(107, 79, 160, 0.4), transparent 60%),
+      linear-gradient(160deg, #0d2010 0%, #1b5e20 55%, #2e7d32 100%);
+    box-shadow: 0 30px 60px -24px rgba(27, 94, 32, 0.6);
+  }
+
+  .oc-root::before {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.04));
+    opacity: 0.55;
+  }
+
+  .oc-root:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 36px 72px -26px rgba(27, 94, 32, 0.7);
+  }
+
+  .oc-root::after {
+    display: none;
+  }
+
+  /* ---- Avatar with rotating gradient ring ---- */
+  .oc-photo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 6rem;
+    width: 6rem;
+    border-radius: 9999px;
+  }
+
+  .oc-root .oc-photo {
+    height: 7rem;
+    width: 7rem;
+  }
+
+  .oc-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: conic-gradient(from 0deg, var(--primary), var(--accent), var(--primary));
+    animation: oc-spin 7s linear infinite;
+  }
+
+  .oc-root .oc-photo::before {
+    background: conic-gradient(from 0deg, #ffffff, #9be7a3, #cdbce8, #ffffff);
+  }
+
+  .oc-photo-inner {
+    position: relative;
+    z-index: 1;
+    height: calc(100% - 8px);
+    width: calc(100% - 8px);
     overflow: hidden;
     border-radius: 9999px;
     background: var(--card);
-    border: 3px solid var(--card);
+  }
+
+  /* Decorative watermark icon in the card corner */
+  .oc-watermark {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    color: var(--primary);
+    opacity: 0.06;
+    transform: rotate(-12deg);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .oc-photo::before,
+    .oc-trunk::after {
+      animation: none;
+    }
+  }
+}
+
+@keyframes oc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes oc-flow {
+  0% {
+    top: -20%;
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    top: 120%;
+    opacity: 0;
+  }
+}
+
+@keyframes gallery-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes gallery-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

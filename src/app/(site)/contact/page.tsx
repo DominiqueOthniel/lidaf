@@ -3,6 +3,13 @@ import type { Metadata } from 'next';
 import PageHero from '@/components/PageHero';
 import ContactForm from '@/components/ContactForm';
 import Icon from '@/components/ui/AppIcon';
+import {
+  contact,
+  mailtoHref,
+  mapsHref,
+  telHref,
+  whatsappHref,
+} from '@/config/contact';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -10,30 +17,43 @@ export const metadata: Metadata = {
     'Contactez le Cabinet Lidaf CCA à Douala pour vos besoins en fiscalité, comptabilité, gestion de projets et formations professionnelles.',
 };
 
-const contactInfo = [
-  {
-    icon: 'PhoneIcon',
-    label: 'Téléphone',
-    lines: ['674 574 133', '695 258 918'],
-    href: 'tel:+237674574133',
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: contact.company,
+  email: contact.email,
+  telephone: contact.phones.map((p) => p.tel),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: contact.address.street,
+    addressLocality: 'Douala',
+    addressCountry: 'CM',
   },
-  {
-    icon: 'EnvelopeIcon',
-    label: 'Email',
-    lines: ['cabinetlidaf@gmail.com'],
-    href: 'mailto:cabinetlidaf@gmail.com',
-  },
-  {
-    icon: 'MapPinIcon',
-    label: 'Adresse',
-    lines: ['4851 Douala, Bonapriso', 'Cameroun'],
-    href: 'https://maps.google.com/?q=4851+Douala+Bonapriso',
-  },
-];
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '08:00',
+      closes: '18:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Saturday',
+      opens: '09:00',
+      closes: '13:00',
+    },
+  ],
+  url: '/contact',
+};
 
 export default function ContactPage() {
   return (
     <main className="bg-background min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <PageHero
         eyebrow="Contact"
         icon="EnvelopeIcon"
@@ -42,7 +62,7 @@ export default function ContactPage() {
             Parlons de votre <span className="text-highlight-green">projet</span>
           </>
         }
-        description="Remplissez le formulaire ou contactez-nous directement. Réponse garantie sous 24 heures."
+        description={`Remplissez le formulaire ou contactez-nous directement. Réponse garantie sous ${contact.responseTime}.`}
       />
 
       <section className="pb-12 sm:pb-16 md:pb-20 -mt-6 sm:-mt-8 relative z-10">
@@ -66,37 +86,78 @@ export default function ContactPage() {
             </div>
 
             <div className="lg:col-span-2 space-y-4">
-              {contactInfo.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  target={item.href.startsWith('http') ? '_blank' : undefined}
-                  rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="contact-info-card group"
-                >
-                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <Icon name={item.icon as 'PhoneIcon'} size={20} className="text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
-                      {item.label}
-                    </p>
-                    {item.lines.map((line) => (
-                      <p key={line} className="text-sm font-semibold text-foreground leading-snug">
-                        {line}
-                      </p>
+              {/* Téléphones — liens individuels */}
+              <div className="contact-info-card">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                  <Icon name="PhoneIcon" size={20} className="text-primary" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
+                    Téléphone
+                  </p>
+                  <div className="space-y-1.5">
+                    {contact.phones.map((phone) => (
+                      <a
+                        key={phone.tel}
+                        href={telHref(phone)}
+                        className="block text-sm font-semibold text-foreground hover:text-primary transition-colors"
+                      >
+                        {phone.display}
+                      </a>
                     ))}
                   </div>
-                  <Icon
-                    name="ArrowUpRightIcon"
-                    size={14}
-                    className="text-muted-foreground/40 group-hover:text-primary transition-colors mt-1"
-                  />
-                </a>
-              ))}
+                </div>
+              </div>
+
+              {/* Email */}
+              <a href={mailtoHref()} className="contact-info-card group">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                  <Icon name="EnvelopeIcon" size={20} className="text-primary" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                    Email
+                  </p>
+                  <p className="text-sm font-semibold text-foreground leading-snug break-all">
+                    {contact.email}
+                  </p>
+                </div>
+                <Icon
+                  name="ArrowUpRightIcon"
+                  size={14}
+                  className="text-muted-foreground/40 group-hover:text-primary transition-colors mt-1"
+                />
+              </a>
+
+              {/* Adresse */}
+              <a
+                href={mapsHref()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-info-card group"
+              >
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                  <Icon name="MapPinIcon" size={20} className="text-primary" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                    Adresse
+                  </p>
+                  {contact.address.lines.map((line) => (
+                    <p key={line} className="text-sm font-semibold text-foreground leading-snug">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+                <Icon
+                  name="ArrowUpRightIcon"
+                  size={14}
+                  className="text-muted-foreground/40 group-hover:text-primary transition-colors mt-1"
+                />
+              </a>
 
               <a
-                href="https://wa.me/237674574133?text=Bonjour%20Cabinet%20Lidaf%20CCA%2C%20je%20souhaite%20obtenir%20des%20informations%20sur%20vos%20services."
+                href={whatsappHref()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="whatsapp-btn w-full justify-center"
@@ -112,8 +173,8 @@ export default function ContactPage() {
                     Horaires d&apos;ouverture
                   </p>
                 </div>
-                <p className="text-sm text-foreground font-medium">Lun au Ven : 8h à 18h</p>
-                <p className="text-sm text-muted-foreground mt-1">Sam : 9h à 13h</p>
+                <p className="text-sm text-foreground font-medium">{contact.hours.weekdays}</p>
+                <p className="text-sm text-muted-foreground mt-1">{contact.hours.saturday}</p>
               </div>
             </div>
           </div>

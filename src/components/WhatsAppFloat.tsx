@@ -1,11 +1,17 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import Icon from '@/components/ui/AppIcon';
+import { whatsappHref } from '@/config/contact';
 
 export default function WhatsAppFloat() {
+  const pathname = usePathname();
+
+  if (pathname === '/contact') return null;
+
   return (
     <a
-      href="https://wa.me/237674574133?text=Bonjour%20Cabinet%20Lidaf%20CCA%2C%20je%20souhaite%20obtenir%20des%20informations%20sur%20vos%20services."
+      href={whatsappHref()}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contacter via WhatsApp"

@@ -2,6 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import AppLogo from '@/components/ui/AppLogo';
 import Icon from '@/components/ui/AppIcon';
+import {
+  contact,
+  mailtoHref,
+  mapsHref,
+  telHref,
+  whatsappHref,
+} from '@/config/contact';
 
 const footerLinks = {
   navigation: [
@@ -93,28 +100,48 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-white/70">
               <li className="flex items-start gap-2.5">
                 <Icon name="MapPinIcon" size={16} className="text-primary mt-0.5 flex-shrink-0" />
-                <span>4851 Douala, Bonapriso, Cameroun</span>
+                <a
+                  href={mapsHref()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors"
+                >
+                  {contact.address.full}
+                </a>
               </li>
               <li className="flex items-start gap-2.5">
                 <Icon name="PhoneIcon" size={16} className="text-primary mt-0.5 flex-shrink-0" />
-                <span>674 574 133<br />695 258 918</span>
+                <div className="space-y-1">
+                  {contact.phones.map((phone) => (
+                    <a
+                      key={phone.tel}
+                      href={telHref(phone)}
+                      className="block hover:text-white transition-colors"
+                    >
+                      {phone.display}
+                    </a>
+                  ))}
+                </div>
               </li>
               <li className="flex items-start gap-2.5">
                 <Icon name="EnvelopeIcon" size={16} className="text-primary mt-0.5 flex-shrink-0" />
-                <a href="mailto:cabinetlidaf@gmail.com" className="hover:text-white transition-colors">
-                  cabinetlidaf@gmail.com
+                <a href={mailtoHref()} className="hover:text-white transition-colors break-all">
+                  {contact.email}
                 </a>
               </li>
             </ul>
             <div className="flex items-center gap-3 mt-5">
               {[
-                { icon: 'PhoneIcon', href: 'tel:+237674574133', label: 'Téléphone' },
-                { icon: 'EnvelopeIcon', href: 'mailto:cabinetlidaf@gmail.com', label: 'Email' },
+                { icon: 'PhoneIcon', href: telHref(), label: 'Téléphone' },
+                { icon: 'EnvelopeIcon', href: mailtoHref(), label: 'Email' },
+                { icon: 'ChatBubbleLeftRightIcon', href: whatsappHref(), label: 'WhatsApp', external: true },
               ].map((s) => (
                 <a
                   key={s.icon}
                   href={s.href}
                   aria-label={s.label}
+                  target={s.external ? '_blank' : undefined}
+                  rel={s.external ? 'noopener noreferrer' : undefined}
                   className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 hover:bg-white/10 transition-all"
                 >
                   <Icon name={s.icon as 'PhoneIcon'} size={16} />
