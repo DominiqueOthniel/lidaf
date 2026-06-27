@@ -42,7 +42,7 @@ const reports: Member[] = [
   },
   {
     name: 'Pougom Dominique',
-    role: 'Ingénieure informaticienne',
+    role: 'Ingénieur informaticien',
     department: 'Informatique',
     icon: 'ComputerDesktopIcon',
     photo: '/assets/images/team/dominique-pougom.jpg',
