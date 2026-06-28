@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
@@ -11,34 +11,28 @@ type Member = {
   department: string;
   icon: string;
   photo?: string;
+  accent: 'violet' | 'emerald' | 'amber';
 };
 
 const AVATAR_FALLBACK = '/assets/images/team/avatar-placeholder.svg';
 
-// NOTE : Remplacez les noms / rôles / photos par les informations réelles.
-// Déposez les photos dans /public/assets/images/team/.
 const pdg: Member = {
   name: 'Dr. Fadil Garba',
   role: 'Président Directeur Général',
   department: 'Direction Générale',
   icon: 'BuildingOffice2Icon',
   photo: '/assets/images/leadership/pdg-fadil-garba.jpg',
+  accent: 'emerald',
 };
 
 const reports: Member[] = [
   {
-    name: 'Nom Prénom',
-    role: 'Directrice Administrative & Financière',
-    department: 'Finances & RH',
-    icon: 'BanknotesIcon',
-    photo: '/assets/images/team/daf.jpg',
-  },
-  {
-    name: 'Nom Prénom',
-    role: 'Directeur Conseil & Stratégie',
-    department: 'Consulting',
+    name: 'KASSE AROLD',
+    role: 'Ingénieur en gestion de projets',
+    department: 'Gestion de projets',
     icon: 'PresentationChartLineIcon',
-    photo: '/assets/images/team/conseil.jpg',
+    photo: '/assets/images/team/kasse-arold.jpg',
+    accent: 'violet',
   },
   {
     name: 'Pougom Dominique',
@@ -46,6 +40,7 @@ const reports: Member[] = [
     department: 'Informatique',
     icon: 'ComputerDesktopIcon',
     photo: '/assets/images/team/dominique-pougom.jpg',
+    accent: 'emerald',
   },
   {
     name: 'Otiomoko Landry',
@@ -53,18 +48,22 @@ const reports: Member[] = [
     department: 'Missions',
     icon: 'ClipboardDocumentCheckIcon',
     photo: '/assets/images/team/landry-org.jpg',
+    accent: 'amber',
   },
 ];
 
 function MemberCard({ member, isRoot = false }: { member: Member; isRoot?: boolean }) {
   return (
-    <div className={`oc-card group ${isRoot ? 'oc-root' : ''}`}>
+    <div
+      className={`oc-card group ${isRoot ? 'oc-root' : ''}`}
+      data-accent={isRoot ? undefined : member.accent}
+    >
       {!isRoot && (
-        <Icon name={member.icon} size={64} className="oc-watermark" />
+        <Icon name={member.icon} size={72} className="oc-watermark" aria-hidden="true" />
       )}
 
       {isRoot && (
-        <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[0.625rem] font-bold uppercase tracking-widest text-white backdrop-blur-sm">
+        <span className="oc-root-badge">
           <Icon name="StarIcon" variant="solid" size={11} />
           Direction Générale
         </span>
@@ -78,92 +77,100 @@ function MemberCard({ member, isRoot = false }: { member: Member; isRoot?: boole
             fill
             unoptimized
             fallbackSrc={AVATAR_FALLBACK}
-            className="object-cover object-top transition-transform duration-500 group-hover:scale-110"
-            sizes="120px"
+            className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-110"
+            sizes="(max-width: 640px) 96px, 120px"
           />
         </div>
+        <span className="oc-photo-shine" aria-hidden="true" />
       </div>
 
       {!isRoot && (
-        <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-widest text-accent">
+        <span className="oc-dept-badge">
           <Icon name={member.icon} size={11} />
           {member.department}
         </span>
       )}
 
-      <h3
-        className={`text-base font-extrabold leading-snug ${
-          isRoot ? 'mt-4 text-lg text-white' : 'mt-2 text-foreground'
-        }`}
-      >
-        {member.name}
-      </h3>
+      <h3 className={`oc-name ${isRoot ? 'oc-name--root' : ''}`}>{member.name}</h3>
 
-      <p
-        className={`mt-1 text-xs leading-snug ${
-          isRoot ? 'text-white/75' : 'text-muted-foreground'
-        }`}
-      >
-        {member.role}
-      </p>
+      <p className={`oc-role ${isRoot ? 'oc-role--root' : ''}`}>{member.role}</p>
     </div>
   );
 }
 
 export default function OrgChartSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [chartVisible, setChartVisible] = useState(false);
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target
-              .querySelectorAll('.reveal-up')
-              .forEach((el) => el.classList.add('visible'));
-            observer.unobserve(entry.target);
-          }
+          if (!entry.isIntersecting) return;
+
+          const items = entry.target.querySelectorAll<HTMLElement>('.oc-animate');
+          items.forEach((el, i) => {
+            const delay = Number(el.dataset.delay ?? i * 90);
+            window.setTimeout(() => el.classList.add('visible'), delay);
+          });
+
+          window.setTimeout(() => setChartVisible(true), 320);
+          observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0.14, rootMargin: '0px 0px -40px 0px' }
     );
 
-    if (sectionRef.current) observer.observe(sectionRef.current);
+    observer.observe(section);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-20 md:py-24 bg-background">
-      <div className="site-container">
+    <section
+      ref={sectionRef}
+      className="oc-section relative overflow-hidden py-16 sm:py-20 md:py-24"
+    >
+      <div className="oc-section-glow oc-section-glow--left" aria-hidden="true" />
+      <div className="oc-section-glow oc-section-glow--right" aria-hidden="true" />
+      <div className="oc-section-grid" aria-hidden="true" />
+
+      <div className="site-container relative z-[1]">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="section-eyebrow mb-5 reveal-up">
+          <span className="section-eyebrow mb-5 oc-animate" data-delay="0">
             <Icon name="UserGroupIcon" size={12} />
             Notre Organigramme
           </span>
-          <h2 className="text-section-title font-extrabold tracking-tight text-foreground leading-tight reveal-up">
+          <h2 className="text-section-title font-extrabold tracking-tight text-foreground leading-tight oc-animate" data-delay="80">
             Les femmes et les hommes derrière Lidaf CCA.
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground reveal-up">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground oc-animate" data-delay="160">
             Une équipe pluridisciplinaire structurée autour d&apos;une direction de terrain,
             pour vous accompagner du diagnostic jusqu&apos;aux résultats.
           </p>
         </div>
 
-        <div className="oc mt-12">
-          <div className="reveal-up w-full max-w-xs mx-auto">
+        <div className={`oc mt-14 sm:mt-16 ${chartVisible ? 'oc-visible' : ''}`}>
+          <div className="oc-animate w-full max-w-[19rem] mx-auto" data-delay="280">
             <MemberCard member={pdg} isRoot />
           </div>
 
-          <div className="oc-trunk reveal-up" aria-hidden="true" />
+          <div className="oc-trunk" aria-hidden="true">
+            <span className="oc-trunk-pulse" />
+          </div>
 
-          <p className="oc-level-badge reveal-up">Équipe dirigeante · 4 directions</p>
+          <p className="oc-level-badge oc-animate" data-delay="520">
+            Équipe dirigeante · 3 directions
+          </p>
 
           <div className="oc-reports">
             {reports.map((member, index) => (
               <div
                 key={`${member.role}-${member.name}`}
-                className="oc-item reveal-up"
-                style={{ transitionDelay: `${index * 110}ms` }}
+                className="oc-item oc-animate"
+                data-delay={String(600 + index * 140)}
               >
                 <MemberCard member={member} />
               </div>
@@ -171,10 +178,14 @@ export default function OrgChartSection() {
           </div>
         </div>
 
-        <div className="mt-12 flex justify-center reveal-up">
-          <Link href="/contact" className="btn-primary">
+        <div className="mt-14 flex justify-center oc-animate" data-delay="980">
+          <Link href="/contact" className="btn-primary group">
             Travailler avec notre équipe
-            <Icon name="ArrowUpRightIcon" size={16} />
+            <Icon
+              name="ArrowUpRightIcon"
+              size={16}
+              className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
           </Link>
         </div>
       </div>
